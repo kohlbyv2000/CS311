@@ -6,6 +6,7 @@
 #ifndef FILE_PLAYER_HPP_INCLUDED
 #define FILE_PLAYER_HPP_INCLUDED
 
+#include <ostream>
 #include <string>
 
 
@@ -21,32 +22,61 @@ class Player {
     //** Constructor Functions **//
 
     // Default constructor
-    PlayerInfo() {
-        realName = "UNKNOWN";
-        userName = "UNKNOWN";
-        numGames = 0;
+    Player() {
+        getRealName();
+        getUsername();
+        getGames();
     }
 
     // 3-parameter constructor, sets info to given data
-    PlayerInfo(std::string realName, std::string userName, int numGames) {
-        setInfo(realName, userName, numGames);
+    Player(std::string realName, std::string userName, int numGames) {
+        setRealName(realName);
+        setUsername(userName);
+        setGames(numGames);
     }
 
 
-    //* General member functions *//
+    //** Getter and Setter functions **//
 
-    getRealName() {
-        return "";
+    std::string getRealName() {
+        return "UNKNOWN";
     }
 
-    getUsername() {
-        return "";
+    std::string getUsername() {
+        return "UNKNOWN";
     }
     
-    getGames() {
+    int getGames() {
         return 0;
     }
 
+    void setRealName(std::string realname) {
+        return;
+    }
+    
+    void setUsername(std::string username) {
+        return;
+    }
+    
+    void setGames(int games) {
+        return;
+    }
+
+
+    //** General member functions **//
+
+    friend bool inactive() {
+        if (Player player1.numGames == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+   // std::string toString() {
+       //TO DO
+   // }
+    
 
 
     private:
@@ -55,6 +85,28 @@ class Player {
     std::string realName;
     std::string userName;
     int numGames;
-}
+
+}; // End of Player class
+
+
+//friend bool operator!=(const Player &player1, const Player &player2) {
+//    if (player1.realName != player2.realName) {
+//        return true;
+//    } else {
+//        return false;
+//    }
+//}
+
+//friend bool operator==(const Player &player1, const Player &player2) {
+//    if (player1.realName == player2.realName) {
+//        if (player1.userName == player2.userName) {
+//            if (player1.numGames == player2.numGames) {
+//                return true;
+//            }
+//        }
+//    } else {
+//        return false;
+//    }
+//}
 
 #endif

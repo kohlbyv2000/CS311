@@ -29,6 +29,10 @@ public:
     // Set time to given # of hours, minutes, seconds past midnight.
     TimeOfDay(int hh, int mm, int ss) {
         setTime(hh, mm, ss);
+
+        assert();
+        assert();
+        assert();
     }
 
 // ***** TimeOfDay: General public operators *****
