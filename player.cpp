@@ -5,3 +5,7 @@
 
 #include "player.hpp"
 
+void initPlayer() {
+    Player player1;
+    return;
+}

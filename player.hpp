@@ -66,7 +66,8 @@ class Player {
     //** General member functions **//
 
     friend bool inactive() {
-        if (Player player1.numGames == 0) {
+        const Player &player1 = *this;
+        if (player1.numGames == 0) {
             return true;
         } else {
             return false;
@@ -79,6 +80,39 @@ class Player {
     
 
 
+    //** Operator functions **//
+Player operator!=(const Player &player1, const Player &player2) {
+    if (player1.realName != player2.realName) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+Player operator==(const Player &player1, const Player &player2) {
+    if (player1.realName == player2.realName) {
+        if (player1.userName == player2.userName) {
+            if (player1.numGames == player2.numGames) {
+                return true;
+            }
+        }
+    } else {
+        return false;
+    }
+}
+
+Player operator++([[maybe_unused]] int dummy) {
+    auto save = *this;
+    ++(*this.numGames);
+    return save;
+}
+
+Player operator--([[maybe_unused]] int dummy) {
+    auto save = *this;
+    --(*this.numGames);
+    return save;
+}
+
     private:
     
     //** Private data members **//
@@ -87,26 +121,5 @@ class Player {
     int numGames;
 
 }; // End of Player class
-
-
-//friend bool operator!=(const Player &player1, const Player &player2) {
-//    if (player1.realName != player2.realName) {
-//        return true;
-//    } else {
-//        return false;
-//    }
-//}
-
-//friend bool operator==(const Player &player1, const Player &player2) {
-//    if (player1.realName == player2.realName) {
-//        if (player1.userName == player2.userName) {
-//            if (player1.numGames == player2.numGames) {
-//                return true;
-//            }
-//        }
-//    } else {
-//        return false;
-//    }
-//}
 
 #endif
