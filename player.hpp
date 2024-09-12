@@ -8,6 +8,7 @@
 
 #include <ostream>
 #include <string>
+#include <cassert>
 
 
 
@@ -23,9 +24,9 @@ class Player {
 
     // Default constructor
     Player() {
-        getRealName();
-        getUsername();
-        getGames();
+        setRealName("UNKNOWN");
+        setUsername("UNKNOWN");
+        setGames(0);
     }
 
     // 3-parameter constructor, sets info to given data
@@ -74,9 +75,9 @@ class Player {
         }
     }
 
-    // std::string toString() {
-       //TO DO
-    // }
+    std::string toString() {
+        return getRealName() + " (" + getUsername() + "): " + std::to_string(getGames());
+    }
     
 
 
@@ -84,6 +85,7 @@ class Player {
 
     // Pre-increment
     Player &operator++() {
+        assert(numGames > -1);
         ++numGames;
         return *this;
     }
@@ -97,8 +99,11 @@ class Player {
 
     // Pre-decrement
     Player operator--() {
+        assert(numGames > 0);
         --numGames;
-        return *this;
+        if (numGames > 0) {
+            return *this;
+        }
     }
 
     // Post-decrement
@@ -118,18 +123,20 @@ class Player {
 }; // End of Player class
 
 
-friend bool operator!=(const Player &player1, const Player &player2) {
-    if (player1.realName != player2.realName) {
+//** Global operators associated with the Player class **//
+
+bool operator!=(const Player &player1, const Player &player2) {
+    if (player1.getRealName() != player2.getRealName()) {
         return true;
     } else {
         return false;
     }
 }
 
-friend bool operator==(const Player &player1, const Player &player2) {
-    if (player1.realName == player2.realName) {
-        if (player1.userName == player2.userName) {
-            if (player1.numGames == player2.numGames) {
+bool operator==(const Player &player1, const Player &player2) {
+    if (player1.getRealName() == player2.getRealName()) {
+        if (player1.getUsername() == player2.getUsername()) {
+            if (player1.getGames() == player2.getGames()) {
                 return true;
             }
         }
@@ -137,5 +144,7 @@ friend bool operator==(const Player &player1, const Player &player2) {
         return false;
     }
 }
+
+std::ostream &operator<<(std::ostream &str, const Player &obj);
 
 #endif
