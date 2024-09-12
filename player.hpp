@@ -29,7 +29,7 @@ class Player {
     }
 
     // 3-parameter constructor, sets info to given data
-    Player(std::string realName, std::string userName, int numGames) {
+    Player(const std::string &realName, const std::string &userName, int numGames) {
         setRealName(realName);
         setUsername(userName);
         setGames(numGames);
@@ -38,23 +38,23 @@ class Player {
 
     //** Getter and Setter functions **//
 
-    std::string getRealName() {
+    std::string getRealName() const {
         return "UNKNOWN";
     }
 
-    std::string getUsername() {
+    std::string getUsername() const {
         return "UNKNOWN";
     }
     
-    int getGames() {
+    int getGames() const {
         return 0;
     }
 
-    void setRealName(std::string realname) {
+    void setRealName(const std::string &realname) {
         return;
     }
     
-    void setUsername(std::string username) {
+    void setUsername(const std::string &username) {
         return;
     }
     
@@ -65,7 +65,7 @@ class Player {
 
     //** General member functions **//
 
-    friend bool inactive() {
+    bool inactive() {
         const Player &player1 = *this;
         if (player1.numGames == 0) {
             return true;
@@ -74,14 +74,51 @@ class Player {
         }
     }
 
-   // std::string toString() {
+    // std::string toString() {
        //TO DO
-   // }
+    // }
     
 
 
     //** Operator functions **//
-Player operator!=(const Player &player1, const Player &player2) {
+
+    // Pre-increment
+    Player &operator++() {
+        ++numGames;
+        return *this;
+    }
+
+    // Post-increment
+    Player operator++([[maybe_unused]] int dummy) {
+        auto save = *this;
+        ++(*this);
+        return save;
+    }
+
+    // Pre-decrement
+    Player operator--() {
+        --numGames;
+        return *this;
+    }
+
+    // Post-decrement
+    Player operator--([[maybe_unused]] int dummy) {
+        auto save = *this;
+        --(*this);
+        return save;
+    }
+
+    private:
+    
+    //** Private data members **//
+    std::string realName;
+    std::string userName;
+    int numGames;
+
+}; // End of Player class
+
+
+friend bool operator!=(const Player &player1, const Player &player2) {
     if (player1.realName != player2.realName) {
         return true;
     } else {
@@ -89,7 +126,7 @@ Player operator!=(const Player &player1, const Player &player2) {
     }
 }
 
-Player operator==(const Player &player1, const Player &player2) {
+friend bool operator==(const Player &player1, const Player &player2) {
     if (player1.realName == player2.realName) {
         if (player1.userName == player2.userName) {
             if (player1.numGames == player2.numGames) {
@@ -100,26 +137,5 @@ Player operator==(const Player &player1, const Player &player2) {
         return false;
     }
 }
-
-Player operator++([[maybe_unused]] int dummy) {
-    auto save = *this;
-    ++(*this.numGames);
-    return save;
-}
-
-Player operator--([[maybe_unused]] int dummy) {
-    auto save = *this;
-    --(*this.numGames);
-    return save;
-}
-
-    private:
-    
-    //** Private data members **//
-    std::string realName;
-    std::string userName;
-    int numGames;
-
-}; // End of Player class
 
 #endif
