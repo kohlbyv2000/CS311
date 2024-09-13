@@ -7,16 +7,20 @@
 #include <ostream>
 #include <cassert>
 
-void Player::getRealName(std::string realName) {
-    
-}
-
-void Player::setRealName() {
-    
-}
-
-
 void initPlayer() {
     Player player1;
     return;
+}
+
+std::ostream &operator<<(std::ostream &str, const Player &obj) {
+    std::string realName;
+    std::string userName;
+    int numGames;
+
+    obj.getRealName(realName) const;
+    obj.getUsername(userName) const;
+    obj.getGames(numGames) const;
+
+    str << realName << " (" << userName << "): " << numGames;
+    return str;
 }
