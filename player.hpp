@@ -40,32 +40,33 @@ class Player {
     //** Getter and Setter functions **//
 
     std::string getRealName() const {
-        return "UNKNOWN";
+        return realName;
     }
 
     std::string getUsername() const {
-        return "UNKNOWN";
+        return userName;
     }
     
     int getGames() const {
-        return 0;
+        return numGames;
     }
 
     void setRealName(const std::string &realname) {
-        return;
+        realName = realname;
     }
     
     void setUsername(const std::string &username) {
-        return;
+        userName = username;
     }
     
     void setGames(int games) {
-        return;
+        numGames = games;
     }
 
 
     //** General member functions **//
-
+    
+    // Is the player inactive?
     bool inactive() {
         const Player &player1 = *this;
         if (player1.numGames == 0) {
@@ -74,9 +75,10 @@ class Player {
             return false;
         }
     }
-
-    std::string toString() {
-        return getRealName() + " (" + getUsername() + "): " + std::to_string(getGames());
+    
+    // Output the player's info as a string
+    std::string toString() const {
+        return realName + " (" + userName + "): " + std::to_string(numGames);
     }
     
 
@@ -99,7 +101,7 @@ class Player {
 
     // Pre-decrement
     Player operator--() {
-        assert(numGames > 0);
+        assert(numGames >= 0);
         --numGames;
         if (numGames > 0) {
             return *this;

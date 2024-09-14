@@ -7,20 +7,15 @@
 #include <ostream>
 #include <cassert>
 
-void initPlayer() {
-    Player player1;
-    return;
-}
 
+// Stream insertion operator
 std::ostream &operator<<(std::ostream &str, const Player &obj) {
-    std::string realName;
-    std::string userName;
-    int numGames;
 
-    obj.getRealName(realName) const;
-    obj.getUsername(userName) const;
-    obj.getGames(numGames) const;
-
-    str << realName << " (" << userName << "): " << numGames;
+    auto realName = obj.getRealName();
+    auto userName = obj.getUsername();
+    auto numGames = obj.getGames();
+    
+    str << obj.toString();
+    //str << realName << " (" << userName << "): " << numGames;
     return str;
 }
