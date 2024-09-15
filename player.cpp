@@ -12,9 +12,7 @@
 
 // Equal
 bool Player::operator==(const Player &player1) const {
-    return realName == player1.getRealName() && 
-    userName == player1.getUsername() &&
-    numGames == player1.getGames();
+    return realName == player1.getRealName() && userName == player1.getUsername() && numGames == player1.getGames();
 }
 
 // Not-equal
