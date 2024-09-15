@@ -67,13 +67,8 @@ class Player {
     //** General member functions **//
     
     // Is the player inactive?
-    bool inactive() {
-        const Player &player1 = *this;
-        if (player1.numGames == 0) {
-            return true;
-        } else {
-            return false;
-        }
+    bool inactive() const {
+        return numGames == 0;
     }
     
     // Output the player's info as a string
@@ -94,26 +89,35 @@ class Player {
 
     // Post-increment
     Player operator++([[maybe_unused]] int dummy) {
-        auto save = *this;
-        ++(*this);
+        Player save = *this;
+        ++numGames;
         return save;
     }
 
     // Pre-decrement
     Player operator--() {
         assert(numGames >= 0);
-        --numGames;
         if (numGames > 0) {
-            return *this;
+            --numGames;
         }
+        return *this;
     }
 
     // Post-decrement
     Player operator--([[maybe_unused]] int dummy) {
-        auto save = *this;
-        --(*this);
-        return save;
+        //Player save = *this;
+        if (numGames > 0) {
+        --numGames;
+        }
+        return *this;
     }
+    
+    // Equal
+    bool operator==(const Player &player1) const;
+
+    // Not-equal
+    bool operator!=(const Player &player1) const;
+
 
     private:
     
@@ -125,27 +129,7 @@ class Player {
 }; // End of Player class
 
 
-//** Global operators associated with the Player class **//
-
-bool operator!=(const Player &player1, const Player &player2) {
-    if (player1.getRealName() != player2.getRealName()) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-bool operator==(const Player &player1, const Player &player2) {
-    if (player1.getRealName() == player2.getRealName()) {
-        if (player1.getUsername() == player2.getUsername()) {
-            if (player1.getGames() == player2.getGames()) {
-                return true;
-            }
-        }
-    } else {
-        return false;
-    }
-}
+//** Global operator associated with the Player class **//
 
 std::ostream &operator<<(std::ostream &str, const Player &obj);
 
