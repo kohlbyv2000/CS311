@@ -95,8 +95,8 @@ class Player {
     }
 
     // Pre-decrement
-    Player operator--() {
-        assert(numGames >= 0);
+    Player &operator--() {
+        assert(numGames > -1);
         if (numGames > 0) {
             --numGames;
         }
@@ -105,11 +105,11 @@ class Player {
 
     // Post-decrement
     Player operator--([[maybe_unused]] int dummy) {
-        //Player save = *this;
+        Player save = *this;
         if (numGames > 0) {
         --numGames;
         }
-        return *this;
+        return save;
     }
     
     // Equal

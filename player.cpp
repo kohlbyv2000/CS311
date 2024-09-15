@@ -10,25 +10,20 @@
 //** Definitions of associated global operators **/
 
 
-// Not-equal operator
-bool Player::operator!=(const Player &player1) const {
-    return !(*this == player1);
-}
-
-// Equal operator
+// Equal
 bool Player::operator==(const Player &player1) const {
     return realName == player1.getRealName() && 
     userName == player1.getUsername() &&
     numGames == player1.getGames();
 }
 
-// Stream insertion operator
-std::ostream &operator<<(std::ostream &str, const Player &obj) {
+// Not-equal
+bool Player::operator!=(const Player &player1) const {
+    return !(*this == player1);
+}
 
-    auto realName = obj.getRealName();
-    auto userName = obj.getUsername();
-    //auto numGames = obj.getGames();
-    
+// Stream insertion
+std::ostream &operator<<(std::ostream &str, const Player &obj) {
     str << obj.toString();
     return str;
 }
