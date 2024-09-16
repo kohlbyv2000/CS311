@@ -20,7 +20,7 @@ class MSArray {
 
     public:
 
-    // 
+
     using size_type = std::size_t;
     using value_type = ValType;
 
@@ -28,8 +28,20 @@ class MSArray {
     //** Ctor Functions and Big Five **//
 
     // Default ctor
-    explicit MSArray(size_type size)
-        :_arrayptr(new value_type[8]) {}
+    MSArray()
+        : _arrayptr(new value_type[8]), _size(8) {}
+    
+    // 1-parameter ctor
+    explicit MSArray(size_type size) : _arrayptr(new value_type[size]), _size(size) {}
+    
+    // 2-parameter ctor
+    explicit MSArray(size_type size, const value_type &item) 
+    : _arrayptr(new value_type[size]), _size(size)
+    {
+        //for (auto b : _arrayptr) {
+        //    _arrayptr[b];
+        //}
+    }
 
     // Dctor
     ~MSArray() {
@@ -67,7 +79,7 @@ class MSArray {
     //** General member functions **//
 
     size_type size() {
-        return _arrayptr.size(); 
+        return _arrayptr.size();
     }
 
     size_type begin() {
@@ -114,6 +126,27 @@ class MSArray {
         return !(*this == other);
     }
 
+    // Less than
+    bool operator<(const MSArray &other) const {
+        return *this < other._arrayptr;
+    }
+
+    // Less than or equal to
+    bool operator<=(const MSArray &other) const {
+        return *this < other || *this == other;
+    }
+
+    // Greater than
+    bool operator>(const MSArray &other) const {
+        return other < *this;
+    }
+
+    // Greater than or equal to
+    bool operator>=(const MSArray &other) const {
+        return *this > other || *this == other;
+    }
+
+
     //** Private data members/functions **/
     private:
 
@@ -122,6 +155,7 @@ class MSArray {
     }
 
     value_type *_arrayptr;
+    size_type _size;
     
 }; // End of MSArray class template
 
