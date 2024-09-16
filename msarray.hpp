@@ -64,8 +64,55 @@ class MSArray {
     }
 
 
-    //** Operators **/
+    //** General member functions **//
+
+    size_type size() {
+        return _arrayptr.size(); 
+    }
+
+    size_type begin() {
+        return *_arrayptr[0];
+    }
+
+    size_type begin() const {
+        return *_arrayptr[0];
+    }
+
+    size_type end() {
+        return *_arrayptr[8];
+    }
+
+    size_type end() const {
+        return *_arrayptr[8];
+    }
+
+
+    //** Operators **//
     
+    // Non-const array index
+    value_type &operator[](size_type index) {
+        if (index >= 0 && index < 8) {
+            return _arrayptr[index];
+        }
+    }
+    
+    // Const array index
+    const value_type &operator[](size_type index) const {
+        if (index >= 0 && index < 8) {
+            return _arrayptr[index];
+        }
+    }
+    
+    // Equal
+    bool &operator==(const MSArray &other) {
+        return _arrayptr.size() == other._arrayptr.size() &&
+        std::equal(_arrayptr.begin(), _arrayptr.end(), other._arrayptr.begin());
+    }
+
+    // Not-equal
+    bool &operator!=(const MSArray &other) {
+        return !(*this == other);
+    }
 
     //** Private data members/functions **/
     private:
