@@ -51,9 +51,9 @@ class MSArray {
     // Copy ctor
     MSArray(const MSArray &other)
         :_arrayptr(new value_type[8]) {
-            std::copy(other->_arrayptr.begin(), 
-            other->_arrayptr.end(), 
-            other->_arrayptr.begin());
+            std::copy(other.begin(), 
+            other.end(), 
+            other.begin());
         }
 
     // Copy assignment operator
@@ -126,11 +126,6 @@ class MSArray {
         return !(*this == other);
     }
 
-    // Less than
-    bool operator<(const MSArray &other) const {
-        return *this < other._arrayptr;
-    }
-
     // Less than or equal to
     bool operator<=(const MSArray &other) const {
         return *this < other || *this == other;
@@ -158,5 +153,19 @@ class MSArray {
     size_type _size;
     
 }; // End of MSArray class template
+
+
+//** Definitions of associated global operators **/
+
+
+// Less than operator
+template <typename ValType>
+bool operator<(const MSArray<ValType> &first, const MSArray<ValType> &other) {
+    for (std::size_t i = 0; i < first.size(); ++i) {
+        if (first[i] != other[i]) {
+            return first[i] < other[i];
+        }
+    }
+}
 
 #endif
