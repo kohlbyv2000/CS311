@@ -1,6 +1,6 @@
 // msarray.hpp
 // Kohlby Vierthaler
-// 2024/09/15
+// 2024/09/16
 // Header file for moderately smart array
 
 #ifndef FILE_MSARRAY_HPP_INCLUDED
@@ -32,11 +32,11 @@ class MSArray {
         : _arrayptr(new value_type[8]), _size(8) {}
     
     // 1-parameter ctor
-    explicit MSArray(size_type size) : _arrayptr(new value_type[size]), _size(size) {}
+    explicit MSArray(size_type size) : _arrayptr(new value_type[size]), _size(8) {}
     
     // 2-parameter ctor
     explicit MSArray(size_type size, const value_type &item) 
-    : _arrayptr(new value_type[size]), _size(size)
+    : _arrayptr(new value_type[size]), _size(8)
     {
         //for (auto b : _arrayptr) {
         //    _arrayptr[b];
@@ -51,9 +51,9 @@ class MSArray {
     // Copy ctor
     MSArray(const MSArray &other)
         :_arrayptr(new value_type[8]) {
-            std::copy(other._arrayptr.begin(), 
-            other._arrayptr.end(), 
-            other._arrayptr.begin());
+            std::copy(other->_arrayptr.begin(), 
+            other->_arrayptr.end(), 
+            other->_arrayptr.begin());
         }
 
     // Copy assignment operator
@@ -78,24 +78,24 @@ class MSArray {
 
     //** General member functions **//
 
-    size_type size() {
-        return _arrayptr.size();
+    size_type size() const {
+        return _size;
     }
 
-    size_type begin() {
-        return *_arrayptr[0];
+    value_type* begin() {
+        return _arrayptr;
     }
 
-    size_type begin() const {
-        return *_arrayptr[0];
+    const value_type* begin() const {
+        return _arrayptr;
     }
 
-    size_type end() {
-        return *_arrayptr[8];
+    value_type* end() {
+        return begin() + size();
     }
 
-    size_type end() const {
-        return *_arrayptr[8];
+    const value_type* end() const {
+        return begin() + size();
     }
 
 
@@ -117,8 +117,8 @@ class MSArray {
     
     // Equal
     bool &operator==(const MSArray &other) {
-        return _arrayptr.size() == other._arrayptr.size() &&
-        std::equal(_arrayptr.begin(), _arrayptr.end(), other._arrayptr.begin());
+        return size() == other.size() &&
+        std::equal(begin(), end(), other.begin());
     }
 
     // Not-equal
