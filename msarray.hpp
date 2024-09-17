@@ -38,9 +38,7 @@ class MSArray {
     explicit MSArray(size_type size, const value_type &item) 
     : _arrayptr(new value_type[size]), _size(8)
     {
-        //for (auto b : _arrayptr) {
-        //    _arrayptr[b];
-        //}
+        
     }
 
     // Dctor
@@ -116,13 +114,13 @@ class MSArray {
     }
     
     // Equal
-    bool &operator==(const MSArray &other) {
+    bool operator==(const MSArray &other) {
         return size() == other.size() &&
         std::equal(begin(), end(), other.begin());
     }
 
     // Not-equal
-    bool &operator!=(const MSArray &other) {
+    bool operator!=(const MSArray &other) {
         return !(*this == other);
     }
 
@@ -155,7 +153,7 @@ class MSArray {
 }; // End of MSArray class template
 
 
-//** Definitions of associated global operators **/
+//** Definitions of associated global operators **//
 
 
 // Less than operator
