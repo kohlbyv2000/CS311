@@ -1,6 +1,6 @@
 // msarray.hpp
 // Kohlby Vierthaler
-// 2024/09/17
+// 2024/09/18
 // Header file for moderately smart array
 
 #ifndef FILE_MSARRAY_HPP_INCLUDED
@@ -49,7 +49,7 @@ class MSArray {
 
     // Copy ctor
     MSArray(const MSArray &other)
-        :_arrayptr(new value_type[8]) {
+        :_arrayptr(new value_type[size()]) {
             std::copy(other._arrayptr, 
             other._arrayptr + other._size, 
             _arrayptr);
@@ -63,9 +63,9 @@ class MSArray {
     }
 
     // Move ctor
-    MSArray(MSArray && other) noexcept 
+    MSArray(MSArray&& other) noexcept 
         :_arrayptr(std::move(other._arrayptr)) {
-            delete [] other._arrayptr;
+            other._arrayptr = nullptr;
         }
 
     // Move assignment operator
@@ -102,16 +102,12 @@ class MSArray {
     
     // Non-const array index
     value_type &operator[](size_type index) {
-        //if (index >= 0 && index < 8) {
             return _arrayptr[index];
-        //}
     }
     
     // Const array index
     const value_type &operator[](size_type index) const {
-        //if (index >= 0 && index < 8) {
             return _arrayptr[index];
-        //}
     }
 
 
@@ -134,7 +130,7 @@ class MSArray {
 // Less than
 template <typename ValType>
 bool operator<(const MSArray<ValType> &first, const MSArray<ValType> &other) {
-    for (std::size_t i = 0; i < first.size(); ++i) {
+    for (std::size_t i = 0; i < first.size() && i < other.size(); ++i) {
         if (first[i] < other[i]) {
             return true;
         } else if (other[i] < first[i]) {
