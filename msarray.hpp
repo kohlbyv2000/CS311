@@ -49,7 +49,7 @@ class MSArray {
 
     // Copy ctor
     MSArray(const MSArray &other)
-        :_arrayptr(new value_type[size()]) {
+        :_size(other.size()), _arrayptr(new value_type[other.size()]) {
             std::copy(other._arrayptr, 
             other._arrayptr + other._size, 
             _arrayptr);
@@ -64,12 +64,13 @@ class MSArray {
 
     // Move ctor
     MSArray(MSArray&& other) noexcept 
-        :_arrayptr(std::move(other._arrayptr)) {
+        :_size(other.size()), _arrayptr(std::move(other._arrayptr)) {
+            other._size = 0;
             other._arrayptr = nullptr;
         }
 
     // Move assignment operator
-    MSArray &operator=(MSArray &rhs) noexcept {
+    MSArray &operator=(MSArray &&rhs) noexcept {
         arrayswap(rhs);
         return *this;
     }
@@ -116,6 +117,7 @@ class MSArray {
 
     void arrayswap(MSArray &other) noexcept {
         std::swap(_arrayptr, other._arrayptr);
+        std::swap(_size, other._size);
     }
 
     value_type *_arrayptr;
