@@ -7,7 +7,6 @@
 #define FILE_MSARRAY_HPP_INCLUDED
 
 #include <cstddef>
-#include <iterator>
 #include <algorithm>
 
 
@@ -32,13 +31,13 @@ class MSArray {
         : _arrayptr(new value_type[8]), _size(8) {}
     
     // 1-parameter ctor
-    explicit MSArray(size_type size) : _arrayptr(new value_type[size]), _size(8) {}
+    explicit MSArray(size_type size) : _arrayptr(new value_type[size]), _size(size) {}
     
     // 2-parameter ctor
     explicit MSArray(size_type size, const value_type &item) 
-    : _arrayptr(new value_type[size]), _size(8)
+    : _arrayptr(new value_type[size]), _size(size)
     {
-        for (size_type i = 0; i < _size; i++) {
+        for (size_type i = 0; i < size; ++i) {
             _arrayptr[i] = item;
         }
     }
@@ -51,9 +50,9 @@ class MSArray {
     // Copy ctor
     MSArray(const MSArray &other)
         :_arrayptr(new value_type[8]) {
-            std::copy(other.begin(), 
-            other.end(), 
-            other.begin());
+            std::copy(other._arrayptr, 
+            other._arrayptr + other._size, 
+            _arrayptr);
         }
 
     // Copy assignment operator
