@@ -1,6 +1,6 @@
 // msarray.hpp
 // Kohlby Vierthaler
-// 2024/09/16
+// 2024/09/17
 // Header file for moderately smart array
 
 #ifndef FILE_MSARRAY_HPP_INCLUDED
@@ -38,7 +38,9 @@ class MSArray {
     explicit MSArray(size_type size, const value_type &item) 
     : _arrayptr(new value_type[size]), _size(8)
     {
-        
+        for (size_type i = 0; i < _size; i++) {
+            _arrayptr[i] = item;
+        }
     }
 
     // Dctor
@@ -101,42 +103,16 @@ class MSArray {
     
     // Non-const array index
     value_type &operator[](size_type index) {
-        if (index >= 0 && index < 8) {
+        //if (index >= 0 && index < 8) {
             return _arrayptr[index];
-        }
+        //}
     }
     
     // Const array index
     const value_type &operator[](size_type index) const {
-        if (index >= 0 && index < 8) {
+        //if (index >= 0 && index < 8) {
             return _arrayptr[index];
-        }
-    }
-    
-    // Equal
-    bool operator==(const MSArray &other) {
-        return size() == other.size() &&
-        std::equal(begin(), end(), other.begin());
-    }
-
-    // Not-equal
-    bool operator!=(const MSArray &other) {
-        return !(*this == other);
-    }
-
-    // Less than or equal to
-    bool operator<=(const MSArray &other) const {
-        return *this < other || *this == other;
-    }
-
-    // Greater than
-    bool operator>(const MSArray &other) const {
-        return other < *this;
-    }
-
-    // Greater than or equal to
-    bool operator>=(const MSArray &other) const {
-        return *this > other || *this == other;
+        //}
     }
 
 
@@ -156,14 +132,48 @@ class MSArray {
 //** Definitions of associated global operators **//
 
 
-// Less than operator
+// Less than
 template <typename ValType>
 bool operator<(const MSArray<ValType> &first, const MSArray<ValType> &other) {
     for (std::size_t i = 0; i < first.size(); ++i) {
-        if (first[i] != other[i]) {
-            return first[i] < other[i];
+        if (first[i] < other[i]) {
+            return true;
+        } else if (other[i] < first[i]) {
+            return false;
         }
     }
+    return first.size() < other.size();
+}
+
+// Greater than
+template <typename ValType>
+bool operator>(const MSArray<ValType> &first, const MSArray<ValType> &other) {
+        return other < first;
+}
+
+// Less than or equal to
+template <typename ValType>
+bool operator<=(const MSArray<ValType> &first, const MSArray<ValType> &other) {
+    return !(first > other);
+}
+
+// Greater than or equal to
+template <typename ValType>
+bool operator>=(const MSArray<ValType> &first, const MSArray<ValType> &other) {
+    return !(first < other);
+}
+
+// Equal
+template <typename ValType>
+bool operator==(const MSArray<ValType> &first, const MSArray<ValType> &other) {
+    return first.size() == other.size() &&
+    std::equal(first.begin(), first.end(), other.begin());
+}
+
+// Not-equal
+template <typename ValType>
+bool operator!=(const MSArray<ValType> &first, const MSArray<ValType> &other) {
+    return !(first == other);
 }
 
 #endif
