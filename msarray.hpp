@@ -13,6 +13,7 @@
 ////**** MSARRAY CLASS TEMPLATE ****////
 
 
+// MSArray class invariants: _arrayptr and _size
 template <typename ValType>
 
 class MSArray {
@@ -49,7 +50,7 @@ class MSArray {
 
     // Copy ctor
     MSArray(const MSArray &other)
-        :_size(other.size()), _arrayptr(new value_type[other.size()]) {
+        :_arrayptr(new value_type[other.size()]), _size(other.size()) {
             std::copy(other._arrayptr, 
             other._arrayptr + other._size, 
             _arrayptr);
@@ -64,7 +65,7 @@ class MSArray {
 
     // Move ctor
     MSArray(MSArray&& other) noexcept 
-        :_size(other.size()), _arrayptr(std::move(other._arrayptr)) {
+        :_arrayptr(std::move(other._arrayptr)), _size(other.size()) {
             other._size = 0;
             other._arrayptr = nullptr;
         }
@@ -99,8 +100,10 @@ class MSArray {
     }
 
 
-    //** Operators **//
+    //** Member operators **//
     
+    
+    // operator[] precondition: index must be non-negative
     // Non-const array index
     value_type &operator[](size_type index) {
             return _arrayptr[index];
@@ -142,6 +145,7 @@ bool operator<(const MSArray<ValType> &first, const MSArray<ValType> &other) {
     return first.size() < other.size();
 }
 
+// operator> precondition: first and other must be valid objects of the same type
 // Greater than
 template <typename ValType>
 bool operator>(const MSArray<ValType> &first, const MSArray<ValType> &other) {
