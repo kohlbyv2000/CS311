@@ -26,13 +26,14 @@
 //     _data points to an array of value_type, allocated with new [],
 //      owned by *this, holding _capacity value_type values -- UNLESS
 //      _capacity == 0, in which case _data may be nullptr.
+template <typename ValType>
 class GFSArray {
 
 // ***** GFSArray: types *****
 public:
 
     // value_type: type of data items
-    using value_type = int;
+    using value_type = ValType;
 
     // size_type: type of sizes & indices
     using size_type = std::size_t;
@@ -62,19 +63,33 @@ public:
 
     // Copy ctor
     // Strong Guarantee
-    GFSArray(const GFSArray & other);
+    GFSArray(const GFSArray &other) {
+        :_data(new value_type[other._size]), _size(other._size) {
+            std::copy(other._data, 
+            other._data + other._size, 
+            _data);
+        }
+    }
 
     // Move ctor
     // No-Throw Guarantee
-    GFSArray(GFSArray && other) noexcept;
+    GFSArray(GFSArray && other) noexcept {
+        :_data(std::move(other._data)), _size(other._size) {
+            other._size = 0;
+            other._data = nullptr;
+    }
 
     // Copy assignment operator
     // ??? Guarantee
-    GFSArray & operator=(const GFSArray & other);
+    GFSArray & operator=(const GFSArray & other) {
+        //TODO
+    }
 
     // Move assignment operator
     // No-Throw Guarantee
-    GFSArray & operator=(GFSArray && other) noexcept;
+    GFSArray & operator=(GFSArray && other) noexcept {
+        //TODO
+    }
 
     // Dctor
     // No-Throw Guarantee
@@ -140,14 +155,17 @@ public:
 
     // resize
     // ??? Guarantee
-    void resize(size_type newsize);
+    void resize(size_type newsize) {
+        //TODO
+    }
 
     // insert
     // Pre:
     //     ???
     // ??? Guarantee
-    iterator insert(iterator pos,
-                    value_type item);
+    iterator insert(iterator pos, const value_type &item) {
+        //TODO
+    }
         // Above, passing by value is appropriate, since our value type
         // is int. However, if the value type is changed, then a
         // different parameter-passing method may need to be used.
@@ -156,11 +174,13 @@ public:
     // Pre:
     //     ???
     // ??? Guarantee
-    iterator erase(iterator pos);
+    iterator erase(iterator pos) {
+        //TODO
+    }
 
     // push_back
     // ??? Guarantee
-    void push_back(value_type item)
+    void push_back(const value_type &item)
         // Above, passing by value is appropriate, since our value type
         // is int. However, if the value type is changed, then a
         // different parameter-passing method may need to be used.
@@ -179,7 +199,9 @@ public:
 
     // swap
     // No-Throw Guarantee
-    void swap(GFSArray & other) noexcept;
+    void swap(GFSArray & other) noexcept {
+        //TODO
+    }
 
 // ***** GFSArray: data members *****
 private:
