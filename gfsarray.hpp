@@ -65,22 +65,27 @@ public:
     // Strong Guarantee
     GFSArray(const GFSArray &other) {
         :_data(new value_type[other._size]), _size(other._size) {
-            std::copy(other._data, 
-            other._data + other._size, 
-            _data);
+
+            try {
+                std::copy(other._data, 
+                other._data + other._size, 
+                _data);
+            } catch (...) {
+                // Cleanup
+            }
         }
     }
 
     // Move ctor
     // No-Throw Guarantee
-    GFSArray(GFSArray && other) noexcept {
+    GFSArray(GFSArray && other) noexcept
         :_data(std::move(other._data)), _size(other._size) {
             other._size = 0;
             other._data = nullptr;
     }
 
     // Copy assignment operator
-    // ??? Guarantee
+    // Strong Guarantee
     GFSArray & operator=(const GFSArray & other) {
         //TODO
     }
@@ -154,7 +159,7 @@ public:
     }
 
     // resize
-    // ??? Guarantee
+    // Strong Guarantee
     void resize(size_type newsize) {
         //TODO
     }
@@ -162,7 +167,7 @@ public:
     // insert
     // Pre:
     //     ???
-    // ??? Guarantee
+    // Strong Guarantee
     iterator insert(iterator pos, const value_type &item) {
         //TODO
     }
@@ -173,13 +178,13 @@ public:
     // erase
     // Pre:
     //     ???
-    // ??? Guarantee
+    // Strong Guarantee
     iterator erase(iterator pos) {
         //TODO
     }
 
     // push_back
-    // ??? Guarantee
+    // Strong Guarantee
     void push_back(const value_type &item)
         // Above, passing by value is appropriate, since our value type
         // is int. However, if the value type is changed, then a
