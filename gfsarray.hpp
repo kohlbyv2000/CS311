@@ -1,6 +1,6 @@
 // gfsarray.hpp
 // Adam Bishop and Kohlby Vierthaler
-// 2024/10/28
+// 2024/10/29
 // Header file for frightfully smart array
 
 
@@ -63,19 +63,19 @@ public:
 
     // Copy ctor
     // Strong Guarantee
-    GFSArray(const GFSArray &other) {
+    GFSArray(const GFSArray &other)
         :_data(new value_type[other._size]), _size(other._size) {
 
             try {
-                auto copy = std::copy(other._data, 
+                GFSArray temp(other);
+                temp = std::copy(other._data, 
                 other._data + other._size, 
                 _data);
             } catch (...) {
-                copy = nullptr;
+                //delete GFSArray temp;
                 throw;
             }
         }
-    }
 
     // Move ctor
     // No-Throw Guarantee
@@ -114,11 +114,11 @@ public:
     // Pre:
     //     index >= 0
     // No-Throw Guarantee
-    value_type & operator[](size_type index)
+    value_type &operator[](size_type index)
     {
         return _data[index];
     }
-    const value_type & operator[](size_type index) const
+    const value_type &operator[](size_type index) const
     {
         return _data[index];
     }
@@ -208,8 +208,10 @@ public:
 
     // swap
     // No-Throw Guarantee
-    void swap(GFSArray & other) noexcept {
-        //TODO
+    void swap(GFSArray &other) noexcept {
+        
+        std::swap(_data, other._data);
+        std::swap(_size, other._size);
     }
 
 // ***** GFSArray: data members *****
