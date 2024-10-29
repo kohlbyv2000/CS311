@@ -1,6 +1,6 @@
 // gfsarray.hpp
 // Adam Bishop and Kohlby Vierthaler
-// 2024/10/27
+// 2024/10/28
 // Header file for frightfully smart array
 
 
@@ -10,7 +10,7 @@
 #include <cstddef>
 // For std::size_t
 #include <algorithm>
-// For std::max
+// For std::max, std::copy
 
 
 // *********************************************************************
@@ -67,11 +67,12 @@ public:
         :_data(new value_type[other._size]), _size(other._size) {
 
             try {
-                std::copy(other._data, 
+                auto copy = std::copy(other._data, 
                 other._data + other._size, 
                 _data);
             } catch (...) {
-                // Cleanup
+                copy = nullptr;
+                throw;
             }
         }
     }
@@ -85,15 +86,18 @@ public:
     }
 
     // Copy assignment operator
-    // Strong Guarantee
-    GFSArray & operator=(const GFSArray & other) {
-        //TODO
+    // No-Throw Guarantee
+    GFSArray &operator=(const GFSArray &other) noexcept {
+        auto other_copy = other;
+        swap(other_copy);
+        return *this;
     }
 
     // Move assignment operator
     // No-Throw Guarantee
-    GFSArray & operator=(GFSArray && other) noexcept {
-        //TODO
+    GFSArray &operator=(GFSArray && other) noexcept {
+        swap(other);
+        return *this;
     }
 
     // Dctor
@@ -108,7 +112,7 @@ public:
 
     // operator[] - non-const & const
     // Pre:
-    //     ???
+    //     index >= 0
     // No-Throw Guarantee
     value_type & operator[](size_type index)
     {
