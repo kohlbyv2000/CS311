@@ -1,6 +1,6 @@
 // gfsarray.hpp
-// Adam Bishop and Kohlby Vierthaler
-// 2024/10/29
+// Kohlby Vierthaler
+// 2024/10/31
 // Header file for frightfully smart array
 
 
@@ -10,7 +10,11 @@
 #include <cstddef>
 // For std::size_t
 #include <algorithm>
-// For std::max, std::copy
+// For std::max, std::copy, std::move
+#include <iostream>
+// For std::cerr
+#include <stdexcept>
+// For std::out_of_range
 
 
 // *********************************************************************
@@ -170,40 +174,80 @@ public:
 
     // insert
     // Pre:
-    //     ???
+    //    0 <= pos < _size
     // Strong Guarantee
     iterator insert(iterator pos, const value_type &item) {
-        //TODO
+
+        if (pos < 0 || pos > _size - 1) {
+            throw std::out_of_range();
+        }
+
+        try {
+
+            // Shift elements beyond insertion up by one position
+            for (size_type i = pos; i < _size; ++i) {
+                _data[i] = _data[i + 1];
+            }
+
+            _data[pos] = item;
+            ++_size;
+
+        } catch (std::out_of_range) {
+
+            std::cerr << "Index out of range";
+
+        } catch (...) {
+
+            // If insert fails, cleanup
+            delete _data[pos];
+            for (size_type i = pos; i < _size; ++i) {
+                _data[i] = _data[i - 1];
+            }
+        }
+
+        
     }
-        // Above, passing by value is appropriate, since our value type
-        // is int. However, if the value type is changed, then a
-        // different parameter-passing method may need to be used.
+    
 
     // erase
     // Pre:
-    //     ???
+    //    0 <= pos < _size
     // Strong Guarantee
     iterator erase(iterator pos) {
-        //TODO
+        
+        if (pos < 0 || pos > _size - 1) {
+            throw std::out_of_range();
+        }
+
+        try {
+
+            for (size_type i = _size - 1; i > pos; --i) {
+                _data[i] = _data[i - 1];
+            }
+
+            --_size;
+
+        } catch (...) {
+
+        }
     }
 
     // push_back
     // Strong Guarantee
     void push_back(const value_type &item)
-        // Above, passing by value is appropriate, since our value type
-        // is int. However, if the value type is changed, then a
-        // different parameter-passing method may need to be used.
     {
         insert(end(), item);
     }
 
     // pop_back
     // Pre:
-    //     ???
-    // ??? Guarantee
+    //     end != 0
+    // Strong Guarantee
     void pop_back()
     {
-        erase(end()-1);
+        if (end() > 0) {
+            erase(end()-1);
+        }
     }
 
     // swap
