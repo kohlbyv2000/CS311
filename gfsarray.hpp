@@ -1,6 +1,6 @@
 // gfsarray.hpp
-// Kohlby Vierthaler
-// 2024/1q/31
+// Kohlby Vierthaler and Adam Bishop
+// 2024/11/01
 // Header file for frightfully smart array
 
 
