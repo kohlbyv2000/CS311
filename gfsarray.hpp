@@ -1,6 +1,6 @@
 // gfsarray.hpp
 // Kohlby Vierthaler
-// 2024/10/31
+// 2024/1q/31
 // Header file for frightfully smart array
 
 
@@ -229,6 +229,7 @@ public:
 
         } catch (...) {
 
+            
         }
     }
 
