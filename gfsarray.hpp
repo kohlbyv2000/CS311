@@ -174,15 +174,22 @@ public:
     }
 
     void resize(size_type newsize) {
+
         if (newsize > _capacity) {
+
             size_type new_capacity = std::max(newsize, 2 * _capacity);
             value_type *new_data = new value_type[new_capacity];
+
             try {
+
                 std::copy(_data, _data + _size, new_data);
+
             } catch (...) {
+
                 delete[] new_data;
                 throw;
             }
+            
             delete[] _data;
             _data = new_data;
             _capacity = new_capacity;
@@ -197,27 +204,34 @@ public:
     iterator insert(iterator pos, const value_type &item) {
         
         size_type offset = pos - begin();
+        auto currentObj = _data;
+        size_type currentSize = _size;
+
         if (offset > _size) {
             throw std::out_of_range("Insert position out of range");
         }
 
-        if (_size == _capacity) {
-            size_type newcap = (_capacity == 0) ? 1 : 2 * _capacity;
-            value_type* newdata = new value_type[newcap];
+        try {
+
+            if (_size == _capacity) {
+                size_type newcap = (_capacity == 0) ? 1 : 2 * _capacity;
+                value_type* newdata = new value_type[newcap];
             
-            // Copy elements before insertion point
-            std::copy(begin(), pos, newdata);
+                // Copy elements before insertion point
+                std::copy(begin(), pos, newdata);
             
-            // Insert new element
-            newdata[offset] = item;
+                // Insert new element
+                newdata[offset] = item;
             
-            // Copy remaining elements
-            std::copy(pos, end(), newdata + offset + 1);
+                // Copy remaining elements
+                std::copy(pos, end(), newdata + offset + 1);
             
-            delete[] _data;
-            _data = newdata;
-            _capacity = newcap;
-        } else {
+                delete[] _data;
+                _data = newdata;
+                _capacity = newcap;
+
+            } else {
+
             // Shift elements to make room
             for (iterator it = end(); it != pos; --it) {
                 *it = *(it - 1);
@@ -226,6 +240,12 @@ public:
         }
         
         ++_size;
+
+        } catch (...) {
+            _data = currentObj;
+            _size = currentSize;
+        }
+
         return begin() + offset;
     }
 
@@ -236,13 +256,22 @@ public:
     iterator erase(iterator pos) {
 
         size_type offset = pos - begin();
+        auto currentObj = _data;
+        size_type currentSize = _size;
+
         if (offset >= _size) {
             throw std::out_of_range("Erase position out of range");
         }
 
+        try {
         // Shift elements
         std::copy(pos + 1, end(), pos);
         --_size;
+
+        } catch (...) {
+            _data = currentObj;
+            _size = currentSize;
+        }
         
         return begin() + offset;
     }
