@@ -207,11 +207,11 @@ public:
         auto currentObj = _data;
         size_type currentSize = _size;
 
-        if (offset > _size) {
-            throw std::out_of_range("Insert position out of range");
-        }
-
         try {
+
+            if (offset > _size) {
+                throw std::out_of_range("Insert position out of range");
+            }   
 
             if (_size == _capacity) {
                 size_type newcap = (_capacity == 0) ? 1 : 2 * _capacity;
@@ -259,14 +259,15 @@ public:
         auto currentObj = _data;
         size_type currentSize = _size;
 
-        if (offset >= _size) {
-            throw std::out_of_range("Erase position out of range");
-        }
-
         try {
-        // Shift elements
-        std::copy(pos + 1, end(), pos);
-        --_size;
+
+            if (offset >= _size) {
+                throw std::out_of_range("Erase position out of range");
+            }
+
+            // Shift elements
+            std::copy(pos + 1, end(), pos);
+            --_size;
 
         } catch (...) {
             _data = currentObj;
