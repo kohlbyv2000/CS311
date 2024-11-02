@@ -1,5 +1,5 @@
 // gfsarray.hpp
-// Kohlby Vierthaler
+// Kohlby V. & Adam B.
 // 2024/10/31
 // Header file for frightfully smart array
 
@@ -68,33 +68,40 @@ public:
     // Copy ctor
     // Strong Guarantee
     GFSArray(const GFSArray &other)
-        :_data(new value_type[other._size]), _size(other._size) {
-
+        :_capacity(other._capacity),
+        _size(0),  // Initialize size to 0 initially
+        _data(nullptr)  // Initialize data to nullptr
+    {
+        if (_capacity > 0) {
+            _data = new value_type[_capacity];  // Allocate new array
             try {
-                GFSArray temp(other);
-                temp = std::copy(other._data, 
-                other._data + other._size, 
-                _data);
-            } catch (...) {
-                //delete GFSArray temp;
-                throw;
+                std::copy(other._data, other._data + other._size, _data);  // Copy elements
+                _size = other._size;  // Only set size after successful copy
+            }
+            catch (...) {
+                delete[] _data;  // Clean up if copy throws
+                throw;           // Re-throw the exception
             }
         }
+    }
 
     // Move ctor
     // No-Throw Guarantee
     GFSArray(GFSArray && other) noexcept
-        :_data(std::move(other._data)), _size(other._size) {
-            other._size = 0;
-            other._data = nullptr;
+        :_capacity(other._capacity),
+        _size(other._size),
+        _data(other._data) {
+        other._capacity = 0;
+        other._size = 0;
+        other._data = nullptr;
     }
 
     // Copy assignment operator
-    // No-Throw Guarantee
-    GFSArray &operator=(const GFSArray &other) noexcept {
-        auto other_copy = other;
-        swap(other_copy);
-        return *this;
+    // Strong Guarantee (not noexcept)
+    GFSArray &operator=(const GFSArray &other) {
+        GFSArray temp(other);    // Copy construct a temporary
+        swap(temp);              // Swap contents with temporary
+        return *this;            // Return *this, temp gets destroyed
     }
 
     // Move assignment operator
@@ -166,10 +173,21 @@ public:
         return begin() + size();
     }
 
-    // resize
-    // Strong Guarantee
     void resize(size_type newsize) {
-        //TODO
+        if (newsize > _capacity) {
+            size_type new_capacity = std::max(newsize, 2 * _capacity);
+            value_type *new_data = new value_type[new_capacity];
+            try {
+                std::copy(_data, _data + _size, new_data);
+            } catch (...) {
+                delete[] new_data;
+                throw;
+            }
+            delete[] _data;
+            _data = new_data;
+            _capacity = new_capacity;
+        }
+        _size = newsize;
     }
 
     // insert
@@ -177,59 +195,56 @@ public:
     //    0 <= pos < _size
     // Strong Guarantee
     iterator insert(iterator pos, const value_type &item) {
-
-        if (pos < 0 || pos > _size - 1) {
-            throw std::out_of_range();
-        }
-
-        try {
-
-            // Shift elements beyond insertion up by one position
-            for (size_type i = pos; i < _size; ++i) {
-                _data[i] = _data[i + 1];
-            }
-
-            _data[pos] = item;
-            ++_size;
-
-        } catch (std::out_of_range) {
-
-            std::cerr << "Index out of range";
-
-        } catch (...) {
-
-            // If insert fails, cleanup
-            delete _data[pos];
-            for (size_type i = pos; i < _size; ++i) {
-                _data[i] = _data[i - 1];
-            }
-        }
-
         
+        size_type offset = pos - begin();
+        if (offset > _size) {
+            throw std::out_of_range("Insert position out of range");
+        }
+
+        if (_size == _capacity) {
+            size_type newcap = (_capacity == 0) ? 1 : 2 * _capacity;
+            value_type* newdata = new value_type[newcap];
+            
+            // Copy elements before insertion point
+            std::copy(begin(), pos, newdata);
+            
+            // Insert new element
+            newdata[offset] = item;
+            
+            // Copy remaining elements
+            std::copy(pos, end(), newdata + offset + 1);
+            
+            delete[] _data;
+            _data = newdata;
+            _capacity = newcap;
+        } else {
+            // Shift elements to make room
+            for (iterator it = end(); it != pos; --it) {
+                *it = *(it - 1);
+            }
+            *pos = item;
+        }
+        
+        ++_size;
+        return begin() + offset;
     }
-    
 
     // erase
     // Pre:
     //    0 <= pos < _size
     // Strong Guarantee
     iterator erase(iterator pos) {
+
+        size_type offset = pos - begin();
+        if (offset >= _size) {
+            throw std::out_of_range("Erase position out of range");
+        }
+
+        // Shift elements
+        std::copy(pos + 1, end(), pos);
+        --_size;
         
-        if (pos < 0 || pos > _size - 1) {
-            throw std::out_of_range();
-        }
-
-        try {
-
-            for (size_type i = _size - 1; i > pos; --i) {
-                _data[i] = _data[i - 1];
-            }
-
-            --_size;
-
-        } catch (...) {
-
-        }
+        return begin() + offset;
     }
 
     // push_back
@@ -245,7 +260,7 @@ public:
     // Strong Guarantee
     void pop_back()
     {
-        if (end() > 0) {
+        if (!empty()) {
             erase(end()-1);
         }
     }
@@ -253,9 +268,9 @@ public:
     // swap
     // No-Throw Guarantee
     void swap(GFSArray &other) noexcept {
-        
-        std::swap(_data, other._data);
+        std::swap(_capacity, other._capacity);
         std::swap(_size, other._size);
+        std::swap(_data, other._data);
     }
 
 // ***** GFSArray: data members *****
