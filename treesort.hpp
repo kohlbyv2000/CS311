@@ -19,14 +19,16 @@ template<typename Value>
 struct BSTreeNode {
 
     Value _data;
-    unique_ptr _left = nullptr;
-    unique_ptr _right = nullptr;
-    
-    BSTreeNode(Value &item, unique_ptr left, unique_ptr right) {
-        _data = item;
-        _left = left;
-        _right = right;
-    }
+    unique_ptr<BSTreeNode<Value>> _left;
+    unique_ptr<BSTreeNode<Value>> _right;
+
+    BSTreeNode(Value item, 
+    unique_ptr<BSTreeNode<Value>> left, 
+    unique_ptr<BSTreeNode<Value>> right) 
+        : _data(item)
+        , _left(left)
+        , _right(right)
+    {}
 };
 
 // treesort
@@ -86,10 +88,19 @@ const Value &item) {
 //     ???
 // Exception safety guarantee:
 //     ???
-template<typename Value>
+template<typename FDIter, typename Value>
 void traversal(const unique_ptr<BSTreeNode<Value>> &node, 
-Value &iter) {
+FDIter &iter) {
 
+    //using Value = typename std::iterator_traits<FDIter>::value_type;
+
+    if (node == nullptr) {
+        return;
+    }
+
+    traversal(node->_left, iter);
+    *iter++ = node->_data;
+    traversal(node->_right, iter);
 }
 
 #endif
