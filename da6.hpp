@@ -60,6 +60,13 @@ public:
     // Dctor
     ~SLLMap() = default;
 
+    // Delete move ctor, move assignment operator
+    // copy ctor, and copy assignment operator
+    SLLMap(const SLLMap&) = delete;
+    SLLMap &operator=(const SLLMap&) = delete;
+    SLLMap(SLLMap&&) = delete;
+    SLLMap &operator=(SLLMap&&) = delete;
+
     // Strong Guarantee
     // Return the size of the linked list
     size_t size() const noexcept {
