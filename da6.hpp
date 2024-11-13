@@ -109,7 +109,7 @@ public:
             current = current->_next.get();
         }
         // If key not found, insert a new key-value pair
-        push_front(std::make_pair(key, value));
+        push_front(head, std::make_pair(key, value));
         ++count;
     }
 
@@ -138,10 +138,10 @@ public:
 
 private:
     // Helper function to push a new key-value pair to the front
-    void push_front(const KVType &kv) {
-        auto newNode = std::make_unique<LLNode2<KVType>>(kv, std::move(head));
-        head = std::move(newNode);
-    }
+   // void push_front(const KVType &kv) {
+   //     auto newNode = std::make_unique<LLNode2<KVType>>(kv, std::move(head));
+   //     head = std::move(newNode);
+   // }
 };
 
 #endif
