@@ -10,7 +10,6 @@
 #include <memory> // For std::unique_ptr
 #include <utility> // For std::pair and std::move
 #include <stdexcept> // For std::out_of_range
-#include <functional> // For std::functional
 
 // Function to reverse a linked list
 template <typename ValType>
@@ -25,45 +24,57 @@ void reverseList(std::unique_ptr<LLNode2<ValType>> & head) {
         prev = std::move(node);
         node = std::move(next);
     }
+    
     head = std::move(prev);
 
     return;
 }
 
-// Start of SLLMap class template
 // Forward declaration of the LLNode2 struct from llnode2.hpp
 template <typename ValType>
 struct LLNode2;
 
-// The SLLMap class template definition.
+// Start of SLLMap class template
 template <typename K, typename V>
 class SLLMap {
+
 public:
-    // Type alias for the key-value pair
+
+    // Key-value pair
     using KVType = std::pair<K, V>;
 
 private:
-    std::unique_ptr<LLNode2<KVType>> head; // Head pointer for the linked list
-    size_t count; // Number of elements in the linked list
+
+    // Head pointer
+    std::unique_ptr<LLNode2<KVType>> head;
+
+    // Number of elements in the linked list
+    size_t count;
 
 public:
-    // Default constructor
+
+    // Strong Guarantee
+    // Default ctor
     SLLMap() : head(nullptr), count(0) {}
 
-    // Destructor
+    // Dctor
     ~SLLMap() = default;
 
-    // Returns the size of the dataset
+    // Strong Guarantee
+    // Return the size of the linked list
     size_t size() const noexcept {
         return count;
     }
 
-    // Checks if the dataset is empty
+    // Strong Guarantee
+    // Check if the list is empty
     bool empty() const noexcept {
         return count == 0;
     }
 
-    // Checks if a key is present in the dataset
+    // Pre: key must be valid
+    // Basic Guarantee
+    // Check if a key is present in the list
     bool present(const K &key) const {
         auto *current = head.get();
         while (current) {
@@ -75,6 +86,9 @@ public:
         return false;
     }
 
+    // Pre: key must be valid,
+    // must be present in list
+    // Basic Guarantee (both versions)
     // Retrieves the value associated with the given key
     V &get(const K &key) {
         auto *current = head.get();
@@ -84,7 +98,7 @@ public:
             }
             current = current->_next.get();
         }
-        throw std::out_of_range("Key not found in the dataset.");
+        throw std::out_of_range("Key not found");
     }
 
     const V &get(const K &key) const {
@@ -95,9 +109,11 @@ public:
             }
             current = current->_next.get();
         }
-        throw std::out_of_range("Key not found in the dataset.");
+        throw std::out_of_range("Key not found");
     }
 
+    // Pre: key and value must be valid
+    // Basic Guarantee
     // Inserts or updates the key-value pair in the dataset
     void set(const K &key, const V &value) {
         auto *current = head.get();
@@ -108,11 +124,14 @@ public:
             }
             current = current->_next.get();
         }
-        // If key not found, insert a new key-value pair
+
+        // Insert a new key-value pair if a key is not found
         push_front(head, std::make_pair(key, value));
         ++count;
     }
 
+    // Pre: key must be valid
+    // Basic Guarantee
     // Erases the key-value pair associated with the given key
     void erase(const K &key) {
         std::unique_ptr<LLNode2<KVType>> *current = &head;
@@ -126,7 +145,9 @@ public:
         }
     }
 
-    // Traverses the dataset and applies the provided function
+    // Pre: function f must be a valid function
+    // Basic Guarantee
+    // Traverse the linked list with the provided function
     template<typename Func>
     void traverse(Func f) const {
         auto *current = head.get();
@@ -135,13 +156,6 @@ public:
             current = current->_next.get();
         }
     }
-
-private:
-    // Helper function to push a new key-value pair to the front
-   // void push_front(const KVType &kv) {
-   //     auto newNode = std::make_unique<LLNode2<KVType>>(kv, std::move(head));
-   //     head = std::move(newNode);
-   // }
-};
+}; // End of SLLMap class template
 
 #endif
