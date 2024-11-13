@@ -1,6 +1,6 @@
 // da6.hpp
 // Kohlby V. & Adam B.
-// 2024/11/10
+// 2024/11/12
 // Header file for linked lists
 
 #ifndef FILE_DA6_HPP_INCLUDED
@@ -8,82 +8,140 @@
 
 #include "llnode2.hpp" // For linked lists
 #include <memory> // For std::unique_ptr
-#include <utility> // For std::pair
+#include <utility> // For std::pair and std::move
+#include <stdexcept> // For std::out_of_range
+#include <functional> // For std::functional
 
 // Function to reverse a linked list
 template <typename ValType>
-void reverseList(unique_ptr<LLNode2<ValType>> & head) {
+void reverseList(std::unique_ptr<LLNode2<ValType>> & head) {
     std::unique_ptr<LLNode2<ValType>> prev = nullptr;
-    std::unique_ptr<LLNode2<ValType>> node = head;
+    std::unique_ptr<LLNode2<ValType>> node = std::move(head);
     std::unique_ptr<LLNode2<ValType>> next = nullptr;
 
     while (node != nullptr) {
-        next = node->next;
-        node->next = prev;
-        prev = node;
-        node = next;
+        next = std::move(node->_next);
+        node->_next = std::move(prev);
+        prev = std::move(node);
+        node = std::move(next);
     }
-    return prev;
+    head = std::move(prev);
+
+    return;
 }
 
 // Start of SLLMap class template
-template <string, int>
+// Forward declaration of the LLNode2 struct from llnode2.hpp
+template <typename ValType>
+struct LLNode2;
+
+// The SLLMap class template definition.
+template <typename K, typename V>
 class SLLMap {
-
 public:
-
-// Default ctor
-SLLMap() {
-
-}
-
-// Dctor
-~SLLMap() {
-    delete *this;
-}
-
-// Delete copy and move ctors and assignment operators
-SLLMap(const SLLMap&) = delete;
-SLLMap(SLLMap&&) = delete;
-SLLMap &operator=(const SLLMap&) = delete;
-SLLMap &operator=(SLLMap&&) = delete;
-
-// Returns linked list size
-int size() {
-    return;
-}
-
-bool empty() {
-    return size() > 0;
-}
-
-bool present(std::pair key) {
-    return key == ;
-}
-
-// get() {
-    //return 
-//}
-
-void set(int key, ValType value) {
-    return std::pair<key, value>;
-}
-
-void erase(int key) {
-    if (key == ) {
-
-    }
-    return;
-}
-
-void traverse() {
-    return;
-}
+    // Type alias for the key-value pair
+    using KVType = std::pair<K, V>;
 
 private:
+    std::unique_ptr<LLNode2<KVType>> head; // Head pointer for the linked list
+    size_t count; // Number of elements in the linked list
 
-    std::unique_ptr<LLNode2<std::pair>>
+public:
+    // Default constructor
+    SLLMap() : head(nullptr), count(0) {}
+
+    // Destructor
+    ~SLLMap() = default;
+
+    // Returns the size of the dataset
+    size_t size() const noexcept {
+        return count;
+    }
+
+    // Checks if the dataset is empty
+    bool empty() const noexcept {
+        return count == 0;
+    }
+
+    // Checks if a key is present in the dataset
+    bool present(const K &key) const {
+        auto *current = head.get();
+        while (current) {
+            if (current->_data.first == key) {
+                return true;
+            }
+            current = current->_next.get();
+        }
+        return false;
+    }
+
+    // Retrieves the value associated with the given key
+    V &get(const K &key) {
+        auto *current = head.get();
+        while (current) {
+            if (current->_data.first == key) {
+                return current->_data.second;
+            }
+            current = current->_next.get();
+        }
+        throw std::out_of_range("Key not found in the dataset.");
+    }
+
+    const V &get(const K &key) const {
+        auto *current = head.get();
+        while (current) {
+            if (current->_data.first == key) {
+                return current->_data.second;
+            }
+            current = current->_next.get();
+        }
+        throw std::out_of_range("Key not found in the dataset.");
+    }
+
+    // Inserts or updates the key-value pair in the dataset
+    void set(const K &key, const V &value) {
+        auto *current = head.get();
+        while (current) {
+            if (current->_data.first == key) {
+                current->_data.second = value; // Update existing value
+                return;
+            }
+            current = current->_next.get();
+        }
+        // If key not found, insert a new key-value pair
+        push_front(std::make_pair(key, value));
+        ++count;
+    }
+
+    // Erases the key-value pair associated with the given key
+    void erase(const K &key) {
+        std::unique_ptr<LLNode2<KVType>> *current = &head;
+        while (*current) {
+            if ((*current)->_data.first == key) {
+                pop_front(*current);
+                --count;
+                return;
+            }
+            current = &(*current)->_next;
+        }
+    }
+
+    // Traverses the dataset and applies the provided function
+    template<typename Func>
+    void traverse(Func f) const {
+        auto *current = head.get();
+        while (current) {
+            f(current->_data.first, current->_data.second);
+            current = current->_next.get();
+        }
+    }
+
+private:
+    // Helper function to push a new key-value pair to the front
+    void push_front(const KVType &kv) {
+        auto newNode = std::make_unique<LLNode2<KVType>>(kv, std::move(head));
+        head = std::move(newNode);
+    }
 };
-
 
 #endif
