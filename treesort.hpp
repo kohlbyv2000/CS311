@@ -35,7 +35,7 @@ struct BSTreeNode {
 // insert
 // Inserts a given item into the BSTree.
 // Pre:
-//     ???
+//     item is valid and can be compared
 // Exception safety guarantee:
 //     Basic Guarantee
 template<typename Value>
@@ -49,7 +49,7 @@ const Value &item) {
     // Recurse to find the correct insertion position
     } else {
 
-        if (head->_data < item) {
+        if (item < head->_data) {
 
             insert(head->_left, item);
             
@@ -63,14 +63,12 @@ const Value &item) {
 // traversal
 // Traverses the BSTree using inorder.
 // Pre:
-//     ???
+//     iter must be valid
 // Exception safety guarantee:
 //     Basic Guarantee
 template<typename FDIter, typename Value>
 void traversal(const unique_ptr<BSTreeNode<Value>> &node, 
 FDIter &iter) {
-
-    //using Value = typename std::iterator_traits<FDIter>::value_type;
 
     if (node == nullptr) {
         return;
@@ -84,7 +82,7 @@ FDIter &iter) {
 // treesort
 // Sort a given range using Treesort.
 // Pre:
-//     ???
+//     first, last, and their range must be valid
 // Exception safety guarantee:
 //     Basic Guarantee
 template <typename FDIter>
