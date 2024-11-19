@@ -1,6 +1,6 @@
 // treesort.hpp
 // Kohlby Vierthaler
-// 2024/11/17
+// 2024/11/18
 // Header file for trees
 
 #ifndef FILE_TREESORT_HPP_INCLUDED
@@ -8,10 +8,8 @@
 
 #include <iterator>
 // For std::iterator_traits;
-
 #include <utility>
 // For std::move
-
 #include <memory>
 // For std::unique_ptr
 using std::unique_ptr;
@@ -39,7 +37,7 @@ struct BSTreeNode {
 // Pre:
 //     ???
 // Exception safety guarantee:
-//     ???
+//     Basic Guarantee
 template<typename Value>
 void insert(unique_ptr<BSTreeNode<Value>> &head, 
 const Value &item) {
@@ -67,7 +65,7 @@ const Value &item) {
 // Pre:
 //     ???
 // Exception safety guarantee:
-//     ???
+//     Basic Guarantee
 template<typename FDIter, typename Value>
 void traversal(const unique_ptr<BSTreeNode<Value>> &node, 
 FDIter &iter) {
@@ -88,7 +86,7 @@ FDIter &iter) {
 // Pre:
 //     ???
 // Exception safety guarantee:
-//     ???
+//     Basic Guarantee
 template <typename FDIter>
 void treesort(FDIter first, FDIter last) {
 
