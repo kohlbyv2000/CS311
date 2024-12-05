@@ -1,29 +1,31 @@
 // reverser_test.cpp
 // Kohlby Vierthaler
-// 2024/12/03
+// 2024/12/05
 // Test program for reverser
 
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
-#include "reverser.hpp"
-#include <vector>
-#include <deque>
-#include <list>
-#include <array>
-#include <string>
-#include <algorithm>
+#include "doctest.h" // Includes for the "doctest" unit-testing framework
+#include "reverser.hpp" // Includes for code to be tested
+#include <vector> // For std::vector
+#include <deque> // For std::deque
+#include <list> // For std::list
+#include <array> // For std::array
+#include <string> // For std::string
+#include <numeric> // For std::iota
 
+
+// Beginning of test cases
 TEST_CASE("Reverser works with various containers and types") {
     Reverser reverser;
 
-    // Test with a vector of ints
+    // Test with std::vector
     {
         std::vector<int> vec {1, 2, 3, 4, 5};
         reverser(vec.begin(), vec.end());
         CHECK(vec == std::vector<int> {5, 4, 3, 2, 1});
     }
 
-    // Test with a deque of doubles
+    // Test with std::deque
     {
         std::deque<double> dd {1.1, 2.2, 3.3};
         reverser(dd.begin(), dd.end());
@@ -37,7 +39,7 @@ TEST_CASE("Reverser works with various containers and types") {
         CHECK(lst == std::list<std::string> {"c", "b", "a"});
     }
 
-    // Test with std::array<float, 4>
+    // Test with std::array
     {
         std::array<float, 4> arr {1.0f, 2.0f, 3.0f, 4.0f};
         reverser(arr.begin(), arr.end());
@@ -70,7 +72,7 @@ TEST_CASE("Reverser handles edge cases") {
     }
 }
 
-// This test checks that the Reverser does not modify elements outside of the specified range
+// Test for modification of elements outside of range
 TEST_CASE("Reverser does not modify items outside the range") {
     Reverser reverser;
 
@@ -89,7 +91,7 @@ TEST_CASE("Reverser works with large ranges") {
     Reverser reverser;
 
     std::vector<int> largeVec(1000000);
-    //std::iota(largeVec.begin(), largeVec.end(), 1); // Fill with 1, 2, ..., 1000000
+    std::iota(largeVec.begin(), largeVec.end(), 1); // Fill with 1, 2, ..., 1000000
     reverser(largeVec.begin(), largeVec.end());
 
     // Check that the first element becomes 1000000 and the last becomes 1
