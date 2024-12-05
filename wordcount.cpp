@@ -1,22 +1,17 @@
 // wordcount.cpp
 // Kohlby Vierthaler
-// 2024/12/03
-// source code for wordcount
+// 2024/12/05
+// Source code for wordcount
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <map>
-#include <string>
-#include <set>
-#include <cctype>
-
-//void sanitizeInput(std::string &word) {
-    //word.erase(remove_if(word.begin(), word.end(), isspace), word.end());
-//}
+#include <iostream> // For std::cout, std::cerr, and std::endl
+#include <fstream> // For std::ifstream
+#include <sstream> // For std::istringstream
+#include <map> // For std::map
+#include <string> // For std::string and std::getline
+#include <set> // For std::set
 
 // Main function
-// Pre: 
+// Pre: File must be valid
 // Basic Guarantee
 int main() {
 
@@ -42,19 +37,19 @@ int main() {
 
     // Read the file line by line
     while (std::getline(infile, line)) {
+
         std::istringstream stream(line);
         std::string word;
 
         // Read individual words
         while (stream >> word) {
-            //sanitizeInput(word);
             wordCount[word]++;
         }
     }
 
-    // Error check
+    // File error check
     if (infile.bad()) {
-        std::cerr << "Error: An error occurred while reading the file." << std::endl;
+        std::cerr << "An error occurred while reading the file." << std::endl;
         return 1;
     }
 
